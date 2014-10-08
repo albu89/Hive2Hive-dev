@@ -1,0 +1,4 @@
+/bin
+/target
+/logs
+.settings/org.sonar.ide.eclipse.core.prefs
