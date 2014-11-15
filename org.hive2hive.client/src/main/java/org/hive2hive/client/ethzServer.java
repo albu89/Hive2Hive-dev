@@ -18,13 +18,13 @@ import org.hive2hive.core.api.interfaces.IH2HNode;
 import org.hive2hive.core.exceptions.IllegalFileLocation;
 import org.hive2hive.core.exceptions.NoPeerConnectionException;
 import org.hive2hive.core.exceptions.NoSessionException;
-import org.hive2hive.core.model.IFileVersion;
 import org.hive2hive.core.model.PermissionType;
 import org.hive2hive.core.processes.files.list.FileTaste;
-import org.hive2hive.core.processes.files.recover.IVersionSelector;
+
 import org.hive2hive.core.security.UserCredentials;
 import org.hive2hive.processframework.exceptions.InvalidProcessStateException;
 import org.hive2hive.processframework.interfaces.IResultProcessComponent;
+
 
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -36,13 +36,29 @@ public class ethzServer {
 	
 	static final String name = "ethz";
 	static final String core = "planetlab3.inf.ethz.ch";
-	static final String rootFolder =  "H2H" + name + "_" + System.currentTimeMillis();
+	static final String rootFolder =  "H2H" + name;
 	Path rootDirectory = Paths.get(System.getProperty("user.home") + "/" + rootFolder);	
 	static final String folderPath = System.getProperty("user.home")  + "/" + rootFolder;
 	static final String fileNameBig = "/movie.mp4";
 	static final String fileNameMedium = "/picture.mp4";
 	static final String fileNameSmall = "/text.mp4";
 	
+	
+	
+	
+	
+	IFileManager fileManager; 
+	
+	File folder = new File(folderPath +  "/shared");
+	
+	File folderBig = new File(folderPath +  "/shared/big");
+	File folderMedium = new File(folderPath +  "/shared/medium"); 
+	File folderSmall = new File(folderPath +  "/shared/small"); 
+	
+	File fileBig = new File(folderBig, fileNameBig);
+	File fileMedium = new File(folderMedium, fileNameMedium);
+	File fileSmall = new File(folderSmall, fileNameSmall);
+
 	
 	public static void main(String[] args) throws Exception  {
 		new ethzServer().start();
@@ -52,6 +68,7 @@ public class ethzServer {
 		
 		createPeer();
 		userManagement();
+		createFolder();
 		menu();
 
 	}
@@ -116,30 +133,9 @@ public class ethzServer {
 	public void analysis(String city) throws NoSessionException, NoPeerConnectionException, IllegalFileLocation, InterruptedException, InvalidProcessStateException {
 		
 		long start, elapsedTime; 
-		IFileManager fileManager = node.getFileManager();
-		fileManager.configureAutostart(false);
 		
-		File folder = new File(folderPath +  "/shared");
-		
-		File folderBig = new File(folderPath +  "/shared/big");
-		File folderMedium = new File(folderPath +  "/shared/medium"); 
-		File folderSmall = new File(folderPath +  "/shared/small"); 
-		
-		File fileBig = new File(folderBig, fileNameBig);
-		File fileMedium = new File(folderMedium, fileNameMedium);
-		File fileSmall = new File(folderSmall, fileNameSmall);
-		
-		ConsoleMenu.print(String.format("Executing '%s'...", "add file"));
-		fileManager.add(folder).start().await();
-		
-		fileManager.add(folderBig).start().await();
-		fileManager.add(folderMedium).start().await();
-		fileManager.add(folderSmall).start().await();
-		
-		fileManager.add(fileBig).start().await();
-		fileManager.add(fileMedium).start().await();
-		fileManager.add(fileSmall).start().await();
-		
+		fileManager = node.getFileManager();
+
 		
 		ConsoleMenu.print(String.format("Executing '%s'...", "Test - " + city));
 		
@@ -170,6 +166,29 @@ public class ethzServer {
 		
 		ConsoleMenu.print("Transmission Time small " + city  + ": " + elapsedTime);	
 		
+		
+	}
+	
+	public void createFolder() throws NoSessionException, NoPeerConnectionException, IllegalFileLocation, InterruptedException, InvalidProcessStateException {
+		//in mac oxs
+		String command = "cp -r shared H2Hethz/";
+		executeCommand(command);
+ 
+		fileManager = node.getFileManager();
+		
+		fileManager.configureAutostart(false);
+		
+		
+		ConsoleMenu.print(String.format("Executing '%s'...", "add file"));
+		fileManager.add(folder).start().await();
+		
+		fileManager.add(folderBig).start().await();
+		fileManager.add(folderMedium).start().await();
+		fileManager.add(folderSmall).start().await();
+		
+		fileManager.add(fileBig).start().await();
+		fileManager.add(fileMedium).start().await();
+		fileManager.add(fileSmall).start().await();
 		
 	}
 	
@@ -257,7 +276,29 @@ public class ethzServer {
 		
 	}
 	
-	
+	private String executeCommand(String command) {
+		 
+		StringBuffer output = new StringBuffer();
+ 
+		Process p;
+		try {
+			p = Runtime.getRuntime().exec(command);
+			p.waitFor();
+			BufferedReader reader = 
+                            new BufferedReader(new InputStreamReader(p.getInputStream()));
+ 
+                        String line = "";			
+			while ((line = reader.readLine())!= null) {
+				output.append(line + "\n");
+			}
+ 
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+ 
+		return output.toString();
+ 
+	}
 
 		
 
