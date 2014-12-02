@@ -2,11 +2,9 @@ package org.hive2hive.core.processes.files.download;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.List;
-import java.util.Set;
+import java.util.*; 
 
 import net.tomp2p.peers.PeerAddress;
-
 import org.hive2hive.core.H2HSession;
 import org.hive2hive.core.file.FileUtil;
 import org.hive2hive.core.model.FileIndex;
@@ -23,6 +21,7 @@ import org.hive2hive.processframework.exceptions.InvalidProcessStateException;
 import org.hive2hive.processframework.exceptions.ProcessExecutionException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+ 
 
 public class InitDownloadChunksStep extends ProcessStep {
 
@@ -38,7 +37,9 @@ public class InitDownloadChunksStep extends ProcessStep {
 		this.context = context;
 		this.session = session;
 		this.ownPeerAddress = ownPeerAddress;
+		
 	}
+
 
 	@Override
 	protected void doExecute() throws InvalidProcessStateException, ProcessExecutionException {
@@ -58,6 +59,8 @@ public class InitDownloadChunksStep extends ProcessStep {
 		}
 
 		logger.debug("Finished downloading file '{}'.", destination);
+		
+		//someMethod(session); 
 	}
 
 	private void downloadChunksFromDHT(MetaFileSmall metaFile) throws InvalidProcessStateException,
@@ -121,4 +124,5 @@ public class InitDownloadChunksStep extends ProcessStep {
 
 		return true;
 	}
+	
 }
