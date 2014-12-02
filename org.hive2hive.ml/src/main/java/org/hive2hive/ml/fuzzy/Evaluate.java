@@ -6,12 +6,6 @@ import net.sourceforge.jFuzzyLogic.FIS;
 import net.sourceforge.jFuzzyLogic.FunctionBlock;
 
 public class Evaluate {
-
-	final static int  bound = 10; 
-	
-
-
-
 	
 	public static double heuristic(String country) {
 		
@@ -20,7 +14,7 @@ public class Evaluate {
 		double network = 0.0; 
 		int randomNum = 0; 
 		
-		String filename = "/Users/alexanderbusser/Documents/uniYearFive/semesterProject"+"/ressources.fcl";
+		String filename = System.getProperty("user.home") + "/data/ressources.fcl";
 		FIS fis = FIS.load(filename, true);
 
 		if (fis == null) {
@@ -37,18 +31,14 @@ public class Evaluate {
 		memory = RessourceSensor.memorySensor.get(country).get(randomNum);
 		network = RessourceSensor.networkSensor.get(country).get(randomNum);
 		
-		
 		// Set inputs
 		fb.setVariable("cpu", cpu);
 		fb.setVariable("memory", memory);
 		fb.setVariable("network", network);
 
-		
-		
 		// Evaluate
 		fb.evaluate();
 		
-		System.out.println(fb.getVariable("quality").getValue());
 		
 		return fb.getVariable("quality").getValue();
 		

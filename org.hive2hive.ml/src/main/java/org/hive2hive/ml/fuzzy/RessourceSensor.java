@@ -37,7 +37,7 @@ public class RessourceSensor {
 		String name = null; 
 		BufferedReader file = null;
 		try {
-			file = new BufferedReader(new FileReader(System.getProperty("user.home") + "/files.txt"));
+			file = new BufferedReader(new FileReader(System.getProperty("user.home") + "/data/files.txt"));
 		} catch (FileNotFoundException e1) {
 			// TODO Auto-generated catch block
 			e1.printStackTrace();
@@ -90,7 +90,7 @@ public class RessourceSensor {
 		BufferedReader file = null;
 		String name = null;
 		try {
-			file = new BufferedReader(new FileReader(System.getProperty("user.home") + "/files.txt"));
+			file = new BufferedReader(new FileReader(System.getProperty("user.home") + "/data/files.txt"));
 		} catch (FileNotFoundException e1) {
 			// TODO Auto-generated catch block
 			e1.printStackTrace();
