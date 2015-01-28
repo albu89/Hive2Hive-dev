@@ -17,6 +17,7 @@ import org.hive2hive.core.exceptions.NoPeerConnectionException;
 import org.hive2hive.core.exceptions.NoSessionException;
 import org.hive2hive.core.model.PermissionType;
 import org.hive2hive.core.security.UserCredentials;
+import org.hive2hive.ml.fuzzy.Evaluate;
 import org.hive2hive.ml.helper.Pair;
 import org.hive2hive.processframework.exceptions.InvalidProcessStateException;
 
@@ -98,9 +99,17 @@ public class seClient {
 		
 		node.getFileManager().configureAutostart(false);
 		
+		while(Evaluate.heuristic("ch") < 0.3) {
+			try {
+				Thread.sleep(5 * 5000);
+			} catch (InterruptedException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+		
 		try {
-			//Add file to DHT
-			node.getFileManager().add(folderShared).start().await();
+			
 			//Share File
 			node.getFileManager().share(folderShared, destination, PermissionType.WRITE).start().await();
 		} catch (NoSessionException | NoPeerConnectionException
