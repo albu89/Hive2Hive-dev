@@ -14,7 +14,7 @@ public class Evaluate {
 		double network = 0.0; 
 		int randomNum = 0; 
 		
-		String filename = System.getProperty("user.home") + "/data/ressources.fcl";
+		String filename = System.getProperty("user.home") + "/data/optimized.fcl";
 		FIS fis = FIS.load(filename, true);
 
 		if (fis == null) {
@@ -25,11 +25,21 @@ public class Evaluate {
 		// Get default function block
 		FunctionBlock fb = fis.getFunctionBlock(null);
 		
+		
+		// Uncomment if you want to use offline version
+		/*
 		RessourceSensor.initialize();
 		randomNum = randInt(); 
 		cpu = RessourceSensor.cpuSensor.get(country).get(randomNum);
 		memory = RessourceSensor.memorySensor.get(country).get(randomNum);
 		network = RessourceSensor.networkSensor.get(country).get(randomNum);
+		*/
+		
+		// Online version of ressource sensor, comment if you want to use offline version
+	
+		cpu = OnlineRessourceSensor.getCPU(country);
+		memory = OnlineRessourceSensor.getMem(country);
+		network = OnlineRessourceSensor.getNetwork(country);
 		
 		// Set inputs
 		fb.setVariable("cpu", cpu);
